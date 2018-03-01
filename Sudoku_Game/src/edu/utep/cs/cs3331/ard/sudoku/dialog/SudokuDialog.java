@@ -180,6 +180,7 @@ public class SudokuDialog extends JFrame {
         add(msgBar, BorderLayout.SOUTH);
     }
     
+    /** Configures sound clips. */
     private void configureSound() {
     	URL soundURL = getClass().getResource(RES_DIR + "click.wav");
     	try {
@@ -195,6 +196,7 @@ public class SudokuDialog extends JFrame {
 		}
 	}
     
+    /** Plays a specific sound file. */
     private void playClick() {
     	if (clip.isRunning())
     		clip.stop();
@@ -250,6 +252,11 @@ public class SudokuDialog extends JFrame {
         return null;
     }
 
+    /**
+     * Queries the user for a Sudoku game board size and difficulty, 
+     * then constructs and handles the Sudoku board game.
+     * @param args Not used.
+     */
     public static void main(String[] args) {
     	Integer[] sizes = {4,9};
     	int size = JOptionPane.showOptionDialog(null, "Choose Board Size: ", "New Game",

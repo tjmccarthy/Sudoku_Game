@@ -23,7 +23,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class JacksonClient {
 	
-	static ObjectMapper mapper = new ObjectMapper();
+	/** An ObjectMapper for processing JSON fields in Jackson. */
+	private static ObjectMapper mapper = new ObjectMapper();
 	
 	/**
 	 * Retrieves and parses a JSON object supplied by a Sudoku Web Service API that provides various information.

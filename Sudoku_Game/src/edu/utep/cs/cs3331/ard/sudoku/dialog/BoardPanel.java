@@ -37,13 +37,13 @@ public class BoardPanel extends JPanel {
 	}
 	
     /** Background color of the board. */
-	private static final Color boardColor = new Color(247, 223, 150);
+	private static final Color BOARD_COLOR = new Color(247, 223, 150);
 	
 	/** Background color of affixed squares. */
-	private static final Color fixedColor = new Color(225, 225, 225);
+	private static final Color FIXED_COLOR = new Color(225, 225, 225);
 	
 	/** Font of the board text. */
-	private static final Font boardNumber = new Font("Monospaced", Font.BOLD, 14);
+	private static final Font BOARD_NUMBER = new Font("Monospaced", Font.BOLD, 14);
 
     /** Board to be displayed. */
     private Board board;
@@ -112,11 +112,11 @@ public class BoardPanel extends JPanel {
         if(board.isSolved())
         	g.setColor(Color.GREEN);
         else
-        	g.setColor(boardColor);
+        	g.setColor(BOARD_COLOR);
         g.fillRect(0, 0, squareSize * board.getSize(), squareSize * board.getSize());
         
         // fill board squares
-        g.setColor(fixedColor); // color fixed squares
+        g.setColor(FIXED_COLOR); // color fixed squares
         for(Integer[] fixedSquare : board.getFixedSquares()) {
         	g.fillRect(fixedSquare[0]*squareSize, fixedSquare[1]*squareSize, squareSize, squareSize);
         }
@@ -135,8 +135,8 @@ public class BoardPanel extends JPanel {
         }
         
 	    g.setColor(Color.BLACK); // fill in numbers  
-        g.setFont(boardNumber);
-        FontMetrics metrics = g.getFontMetrics(boardNumber);
+        g.setFont(BOARD_NUMBER);
+        FontMetrics metrics = g.getFontMetrics(BOARD_NUMBER);
         int width = metrics.stringWidth("0")/2;
         int height = metrics.getDescent();
         int value;
