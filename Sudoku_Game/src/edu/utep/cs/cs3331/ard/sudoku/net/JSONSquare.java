@@ -1,7 +1,7 @@
 package edu.utep.cs.cs3331.ard.sudoku.net;
 
 /**
- * A representation of a single Sudoku game board square from a Sudoku Web Service API.
+ * Sudoku game board square from a Sudoku Web Service API.
  * <p>
  * See <a href="http://www.cs.utep.edu/cheon/ws/sudoku/">http://www.cs.utep.edu/cheon/ws/sudoku/</a>
  * 
@@ -10,13 +10,25 @@ package edu.utep.cs.cs3331.ard.sudoku.net;
  * @since       1.1
  */
 public class JSONSquare {
-	/** X coordinate for a Sudoku game board square. */
+	/** x coordinate for a Sudoku game board square. */
 	private int x;
-	/** Y coordinate for a Sudoku game board square. */
+	/** y coordinate for a Sudoku game board square. */
 	private int y;
 	/** Square value for a Sudoku game board square. */
 	private int value;
 	
+	/** 
+	 * Constructor for the class JSONSquare.
+	 * @param x {@link x}
+	 * @param y {@link y}
+	 * @param value {@link value}
+	 */
+	public JSONSquare(int x, int y, int value) {
+		this.x = x;
+		this.y = y;
+		this.value = value;
+	}
+
 	/**
 	 * Getter for {@link #x}.
 	 * @return {@link #x}

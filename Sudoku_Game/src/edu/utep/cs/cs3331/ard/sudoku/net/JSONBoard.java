@@ -1,7 +1,10 @@
 package edu.utep.cs.cs3331.ard.sudoku.net;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * A representation of a Sudoku game board from a Sudoku Web Service API.
+ * Sudoku game board from a Sudoku Web Service API.
  * <p>
  * See <a href="http://www.cs.utep.edu/cheon/ws/sudoku/">http://www.cs.utep.edu/cheon/ws/sudoku/</a>
  * 
@@ -14,11 +17,9 @@ public class JSONBoard {
 	private boolean response;
 	/** Size of the Sudoku game board. */
  	private int size;
- 	/** An array of Sudoku game board squares.
- 	 * @see {@link JSONSquare}
- 	 */
-	private JSONSquare[] squares;
-	/** Message for was response was false. */
+ 	/** Sudoku game board squares. @see {@link JSONSquare} */
+	private List<JSONSquare> squares = new ArrayList<>();
+	/** Message for why response was false. */
 	private String reason;
 
 	/**
@@ -57,7 +58,7 @@ public class JSONBoard {
 	 * Getter for {@link #squares}.
 	 * @return {@link #squares}
 	 */
-	public JSONSquare[] getSquares() {
+	public List<JSONSquare> getSquares() {
 		return squares;
 	}
 
@@ -65,7 +66,7 @@ public class JSONBoard {
 	 * Setter for {@link #squares}.
 	 * @return {@link #squares}
 	 */
-	public void setSquares(JSONSquare[] squares) {
+	public void setSquares(List<JSONSquare> squares) {
 		this.squares = squares;
 	}
 	
@@ -83,5 +84,15 @@ public class JSONBoard {
 	 */
 	public void setReason(String reason) {
 		this.reason = reason;
+	}
+
+	/**
+	 * Adds a new JSONSquare to the JSONBoard.
+	 * @param x {@link JSONSquare#x}
+	 * @param y {@link JSONSquare#y}
+	 * @param value {@link JSONSquare#value}
+	 */
+	public void addSquare(int x, int y, int value) {
+		squares.add(new JSONSquare(x, y, value));
 	}
 }

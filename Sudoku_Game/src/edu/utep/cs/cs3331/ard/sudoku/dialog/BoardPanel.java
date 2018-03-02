@@ -30,8 +30,8 @@ public class BoardPanel extends JPanel {
 		
 		/** Callback to notify clicking of a square. 
 		 * 
-		 * @param x 0-based column index of the clicked square
-		 * @param y 0-based row index of the clicked square
+		 * @param x 0-based column index of the clicked square.
+		 * @param y 0-based row index of the clicked square.
 		 */
 		void clicked(int x, int y);
 	}
@@ -86,7 +86,7 @@ public class BoardPanel extends JPanel {
      * The indexes are encoded and returned as x*100 + y, 
      * where x and y are 0-based column/row indexes.
      * 
-     * @return Index of the corresponding square.
+     * @return index of the corresponding square.
      */
     private int locateSquare(int x, int y) {
     	if (x < 0 || x > board.getSize() * squareSize

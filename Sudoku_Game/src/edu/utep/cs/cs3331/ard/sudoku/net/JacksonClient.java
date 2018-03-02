@@ -3,76 +3,98 @@ package edu.utep.cs.cs3331.ard.sudoku.net;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.eclipsesource.json.Json;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
- * Static helper methods to retrieve and parse information provided by a Sudoku Web Service API.
+ * Retrieve and parse information provided by a Sudoku Web Service API.
  * <p>
  * See <a href="http://www.cs.utep.edu/cheon/ws/sudoku/">http://www.cs.utep.edu/cheon/ws/sudoku/</a>
  * Occasionally the API will hang on size 9 difficulty 3.
  * 
  * @author      Anthony DesArmier
- * @version     1.1
+ * @version     1.2
  * @since       1.1
  */
 public class JacksonClient {
 	
-	/** An ObjectMapper for processing JSON fields in Jackson. */
-	private static ObjectMapper mapper = new ObjectMapper();
-	
 	/**
 	 * Retrieves and parses a JSON object supplied by a Sudoku Web Service API that provides various information.
-	 * @return An JSONInfo containing various Sudoku Web Service API information.
+	 * @return JSONInfo containing various Sudoku Web Service API information.
+	 * @see JSONInfo
 	 */
 	public static JSONInfo getInfo() {
 		URL url;
-		JSONInfo info = null;
+		JsonObject info = null;
 		try {
 			url = new URL("http://www.cs.utep.edu/cheon/ws/sudoku/info/");
-			info = mapper.readValue(url, JSONInfo.class);
+			InputStreamReader in = new InputStreamReader(url.openStream());
+			info = Json.parse(in).asObject();
 		} catch (MalformedURLException e) {
 			printError("Malformed URL.\n", e);
-		} catch (JsonParseException e) {
-			printError("Invalid JSON data recieved from server.\n", e);
-		} catch (JsonMappingException e) {
-			printError("Invalid JSON data recieved from server.\n", e);
 		} catch (IOException e) {
 			printError("Failed to connect to server.\n", e);
 		}
-		return info;
+		List<Integer> list = new ArrayList<>();
+		JSONInfo jsonInfo = new JSONInfo();
+		JsonArray jsonList;
+		jsonList = info.get("sizes").asArray();
+		for(JsonValue size:jsonList)
+			list.add(size.asInt());
+		jsonInfo.setSizes(list);
+		list.clear();
+		jsonList = info.get("levels").asArray();
+		for(JsonValue level:jsonList)
+			list.add(level.asInt());
+		jsonInfo.setLevels(list);
+		jsonInfo.setDefaultSize(info.getInt("defaultSize", -1));
+		jsonInfo.setDefaultLevel(info.getInt("defaultLevel", -1));
+		return jsonInfo;
 	}
 	
 	/**
 	 * Retrieves and parses a JSON object supplied by a Sudoku Web Service API that provides a Sudoku game board based on given parameters.
-	 * @param size The dimension of the desired Sudoku board.
-	 * @param level The difficulty level of the desired Sudoku board.
-	 * @return A JSONBoard containing information representing a Sudoku game board.
-	 * @throws JsonMappingException
-	 * @throws JsonParseException
-	 * @throws IOException
+	 * @param size dimension of the desired Sudoku board.
+	 * @param level difficulty level of the desired Sudoku board.
+	 * @return JSONBoard containing information representing a Sudoku game board.
+	 * @see JSONBoard
 	 */
 	public static JSONBoard requestBoard(int size, int level) {
 		URL url;
-		JSONBoard board = null;
+		JsonObject board = null;
 		try {
 			url = new URL(String.format("http://www.cs.utep.edu/cheon/ws/sudoku/new/?size=%d&level=%d", size, level));
-			board = mapper.readValue(url, JSONBoard.class);
+			InputStreamReader in = new InputStreamReader(url.openStream());
+			board = Json.parse(in).asObject();
 		} catch (MalformedURLException e) {
 			printError("Malformed URL.\n", e);
-		} catch (JsonParseException e) {
-			printError("Invalid JSON data recieved from server.\n", e);
-		} catch (JsonMappingException e) {
-			printError("Invalid JSON data recieved from server.\n", e);
 		} catch (IOException e) {
 			printError("Failed to connect to server.\n", e);
 		}
-		return board;
+		JSONBoard jsonBoard = new JSONBoard();
+		JsonArray jsonList;
+		boolean response = board.getBoolean("response", false);
+		if(!response)
+			printError("API did not generate request.\n", new Exception());
+		jsonBoard.setResponse(response);
+		jsonBoard.setSize(Integer.valueOf(board.getString("size", "-1"))); // API returns size as a String
+		jsonList = board.get("squares").asArray();
+		for(JsonValue square:jsonList) {
+			int x = square.asObject().getInt("x", -1);
+			int y = square.asObject().getInt("y", -1);
+			int value = square.asObject().getInt("value", -1);
+			jsonBoard.addSquare(x, y, value);
+		}
+		return jsonBoard;
 	}
 	
     /**

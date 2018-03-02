@@ -1,19 +1,21 @@
 package edu.utep.cs.cs3331.ard.sudoku.net;
 
+import java.util.List;
+
 /**
  * Various information from a Sudoku Web Service API.
  * <p>
  * See <a href="http://www.cs.utep.edu/cheon/ws/sudoku/">http://www.cs.utep.edu/cheon/ws/sudoku/</a>
  * 
  * @author		Anthony DesArmier
- * @version     1.1
+ * @version     1.2
  * @since       1.1
  */
 public class JSONInfo {
-	/** A list of valid Sudoku game board sizes. */
-	private int[] sizes;
-	/** A list of valid Sudoku game board levels. */
-	private int[] levels;
+	/** Sudoku game board sizes. */
+	private List<Integer> sizes;
+	/** Sudoku game board levels. */
+	private List<Integer> levels;
 	/** Default Sudoku game board size. */
 	private int defaultSize;
 	/** Default Sudoku game board difficulty. */
@@ -23,7 +25,7 @@ public class JSONInfo {
 	 * Getter for {@link #sizes}.
 	 * @return {@link #sizes}
 	 */
-	public int[] getSizes() {
+	public List<Integer> getSizes() {
 		return sizes;
 	}
 	
@@ -31,7 +33,7 @@ public class JSONInfo {
 	 * Setter for {@link #sizes}.
 	 * @return {@link #sizes}
 	 */
-	public void setSizes(int[] sizes) {
+	public void setSizes(List<Integer> sizes) {
 		this.sizes = sizes;
 	}
 	
@@ -39,7 +41,7 @@ public class JSONInfo {
 	 * Getter for {@link #levels}.
 	 * @return {@link #levels}
 	 */
-	public int[] getLevels() {
+	public List<Integer> getLevels() {
 		return levels;
 	}
 	
@@ -47,8 +49,8 @@ public class JSONInfo {
 	 * Setter for {@link #levels}.
 	 * @return {@link #levels}
 	 */
-	public void setLevels(int[] levels) {
-		this.levels = levels;
+	public void setLevels(List<Integer> list) {
+		this.levels = list;
 	}
 	
 	/**

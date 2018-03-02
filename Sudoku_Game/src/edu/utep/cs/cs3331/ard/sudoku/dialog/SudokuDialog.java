@@ -7,7 +7,7 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.io.IOException;
 import java.net.URL;
-import java.util.stream.IntStream;
+import java.util.List;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -27,12 +27,12 @@ import edu.utep.cs.cs3331.ard.sudoku.model.Board;
 import edu.utep.cs.cs3331.ard.sudoku.net.JacksonClient;
 
 /**
- * A dialog template for playing simple Sudoku games.
+ * Dialog template for playing simple Sudoku games.
  *
  * @author		Yoonsik Cheon
  * @author		Anthony DesArmier
  * @author 		Trevor McCarthy
- * @version     1.1
+ * @version     1.1.1
  * @since       1.1
  */
 @SuppressWarnings("serial")
@@ -71,17 +71,17 @@ public class SudokuDialog extends JFrame {
     }
     
     /** Create a new dialog with the default screen dimensions.
-     * @param size The Sudoku game board size.
-     * @param difficulty The Sudoku game difficulty.
+     * @param size Sudoku game board size.
+     * @param difficulty Sudoku game difficulty.
      */
     public SudokuDialog(int size, int difficulty) {
     	this(DEFAULT_DIM, size, difficulty);
     }
     
     /** Create a new dialog.
-     * @param dim The dialog dimension.
-     * @param size The Sudoku game board size.
-     * @param difficulty The Sudoku game difficulty.
+     * @param dim dialog dimension.
+     * @param size Sudoku game board size.
+     * @param difficulty Sudoku game difficulty.
      */
     public SudokuDialog(Dimension dim, int size, int difficulty) {
         super("Sudoku");
@@ -92,6 +92,7 @@ public class SudokuDialog extends JFrame {
         configureSound();
         //setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
         setVisible(true);
         //setResizable(false);
         showMessage("Selected Number: 0");
@@ -117,7 +118,7 @@ public class SudokuDialog extends JFrame {
     
     /**
      * Callback to be invoked when a number button is clicked.
-     * @param number Clicked number (1-9), or 0 for "X".
+     * @param number clicked number (1-9), or 0 for "X".
      */
     private void numberClicked(int number) {
 		playClick();
@@ -130,7 +131,7 @@ public class SudokuDialog extends JFrame {
      * If the current game is over, start a new game of the given size;
      * otherwise, prompt the user for a confirmation and then proceed
      * accordingly.
-     * @param size Requested puzzle size, either 4 or 9.
+     * @param size requested puzzle size, either 4 or 9.
      */
     private void newClicked(int size) {
         //showMessage("New clicked: " + size);
@@ -139,12 +140,12 @@ public class SudokuDialog extends JFrame {
     			"New Game", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
     	playClick();
     	if(x==0) {
-    		Integer[] levels = IntStream.of(JacksonClient.getInfo().getLevels()).boxed().toArray(Integer[]::new);
+    		List<Integer> levels = JacksonClient.getInfo().getLevels();
     		int difficulty = JOptionPane.showOptionDialog(null, "Choose Difficulty", "New Game",
-    				JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, levels, levels[0]);
+    				JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, levels.toArray(), levels.get(0));
     		playClick();
     		if(difficulty!=-1) {
-    			difficulty = levels[difficulty];
+    			difficulty = levels.get(difficulty);
     			System.out.println(difficulty);
     			this.dispose();
     			new SudokuDialog(DEFAULT_DIM, size, difficulty);
@@ -154,7 +155,7 @@ public class SudokuDialog extends JFrame {
 
     /**
      * Display the given string in the message bar.
-     * @param msg Message to be displayed.
+     * @param msg message to be displayed.
      */
     private void showMessage(String msg) {
         msgBar.setText(msg);
@@ -206,7 +207,7 @@ public class SudokuDialog extends JFrame {
       
     /** 
      * Create a control panel consisting of new and number buttons.
-     * @return Configured JPanel.
+     * @return configured JPanel.
      */
     private JPanel makeControlPanel() {
     	JPanel newButtons = new JPanel(new FlowLayout());
@@ -242,7 +243,7 @@ public class SudokuDialog extends JFrame {
 
     /**
      * Create an image icon from the given image file.
-     * @return Configured ImageIcon.
+     * @return configured ImageIcon.
      */
     private ImageIcon createImageIcon(String filename) {
         URL imageUrl = getClass().getResource(RES_DIR + filename);
@@ -255,7 +256,7 @@ public class SudokuDialog extends JFrame {
     /**
      * Queries the user for a Sudoku game board size and difficulty, 
      * then constructs and handles the Sudoku board game.
-     * @param args Not used.
+     * @param args not used.
      */
     public static void main(String[] args) {
     	Integer[] sizes = {4,9};
@@ -264,12 +265,12 @@ public class SudokuDialog extends JFrame {
     	if(size==-1)
     		System.exit(0);
     	size = sizes[size];
-    	Integer[] levels = IntStream.of(JacksonClient.getInfo().getLevels()).boxed().toArray(Integer[]::new);
+    	List<Integer> levels = JacksonClient.getInfo().getLevels();
     	int difficulty = JOptionPane.showOptionDialog(null, "Choose Difficulty", "New Game",
-				JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, levels, levels[0]);
+				JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, levels.toArray(), levels.get(0));
     	if(difficulty==-1)
     		System.exit(0);
-    	difficulty = levels[difficulty];
+    	difficulty = levels.get(difficulty);
         new SudokuDialog(size, difficulty);
     }
 }

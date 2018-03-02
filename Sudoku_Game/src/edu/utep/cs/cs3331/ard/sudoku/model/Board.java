@@ -8,42 +8,42 @@ import edu.utep.cs.cs3331.ard.sudoku.net.JSONSquare;
 
 
 /**
- * A representation of a Sudoku game board and various game logic.
+ * Sudoku game board and various game logic.
  * 
  * @author      Anthony DesArmier
  * @version     1.1
  * @since       1.0
  */
 public class Board {
-	/** An integer representing the dimension of a Sudoku game board. */
+	/** Dimension of a Sudoku game board. */
 	private int size;
-	/** An integer to denote the dimension of a sub-grid of a Sudoku game board. */
+	/** Dimension of a sub-grid of a Sudoku game board. */
 	private int cellDim;
-	/** A boolean value used to denote whether the Sudoku game board has been solved or not. */
+	/** Sudoku game board has been solved or not. */
 	private boolean solved;
-	/** A Sudoku game board represented as a 2D integer array containing cell values. */
+	/** Sudoku game board represented as a 2D integer array containing cell values. */
 	private int[][] board;
-	/** X, Y coordinates for the last selected board square. */
+	/** x, y coordinates for the last selected board square. */
 	private int[] lastSelect;
-	/** X, Y coordinates for squares that are conflicting with a chosen square. */
+	/** x, y coordinates for squares that are conflicting with a chosen square. */
 	private Set<Integer[]> errorSquares;
-	/** X, Y coordinates for squares that are pre-filled and cannot be changed. */
+	/** x, y coordinates for squares that are pre-filled and cannot be changed. */
 	private Set<Integer[]> fixedSquares;
 	
 	/**
-	 * A constructor for the class Board.
+	 * Constructor for the class Board.
 	 * <p>
 	 * Generates a Sudoku game board.
-	 * @param boardJSON	A JSON object containing information used to create a Sudoku game board.
+	 * @param boardJSON	JsonObject containing information used to create a Sudoku game board.
 	 * @see #board
 	 */
-	public Board(JSONBoard json_board) {
-		this.size = json_board.getSize();
+	public Board(JSONBoard jsonBoard) {
+		this.size = jsonBoard.getSize();
 		board = new int[size][size];
 		this.cellDim = (int)Math.sqrt(size); // Should be a perfect square
 		errorSquares = new HashSet<>();
 		fixedSquares = new HashSet<>();
-        for (JSONSquare square : json_board.getSquares()) {
+        for (JSONSquare square : jsonBoard.getSquares()) {
             board[square.getX()][square.getY()] = square.getValue();
             fixedSquares.add(new Integer[] {square.getX(), square.getY()});
         }
@@ -101,9 +101,9 @@ public class Board {
 	
 	/**
 	 * Returns the value in a given cell of a Sudoku game board.
-	 * @param x The x position of the cell space.
-	 * @param y The y position of the cell space.
-	 * @return The integer value in the provided cell space.
+	 * @param x x position of the cell space.
+	 * @param y y position of the cell space.
+	 * @return value of the provided cell space.
 	 */
 	public int getValue(int x, int y) {
 		return board[x][y];
@@ -111,7 +111,7 @@ public class Board {
 
 	/**
 	 * Inserts a value into a given cell space on the Sudoku game board if valid.
-	 * @param values An integer array containing the x,y and z values corresponding to the Sudoku game board position and value.
+	 * @param values x,y and z values corresponding to the Sudoku game board position and value.
 	 */
 	public void update(int[] values) {
 		if(solved) // no updates if completed
@@ -135,8 +135,8 @@ public class Board {
 	 * Determines if a certain input is valid for the Sudoku game board.
 	 * <p>
 	 * A valid integer can be any integer (0,board size).
-	 * @param value	The integer value to determine if it is valid for the Sudoku game board.
-	 * @return True if the input is valid, false otherwise.
+	 * @param value	value to determine if it is valid for the Sudoku game board.
+	 * @return true if the input is valid, false otherwise.
 	 */
 	public boolean validInput(int value) {
 		if(value > size || value < 0)
@@ -151,7 +151,7 @@ public class Board {
 	 * Only one of each number exists in every row, column, and sub-grid.
 	 * <p>
 	 * Runs in O(n) time.
-	 * @return True of the Sudoku game board is complete and valid, false otherwise.
+	 * @return true of the Sudoku game board is complete and valid, false otherwise.
 	 */
 	private boolean isValidSudoku() {
 		boolean[] bitmap;
@@ -189,8 +189,8 @@ public class Board {
 	 * <p>
 	 * A valid move is considered to be inserting a number that does not already exist
 	 * within the same row, column, or sub-grid.
-	 * @param values An integer array containing the x,y and z values corresponding to the Sudoku game board position and value.
-	 * @return True if valid, false otherwise.
+	 * @param values x,y and z values corresponding to the Sudoku game board position and value.
+	 * @return true if valid, false otherwise.
 	 */
 	private boolean isValidEntry(int[] values) {
 		if(values[2]!=0 ) { // no validity check if value is 0
