@@ -1,20 +1,21 @@
 package edu.utep.cs.cs3331.ard.sudoku.net;
 
 import java.io.Closeable;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+
+import edu.utep.cs.cs3331.ard.sudoku.dialog.SudokuDialog;
 
 /**
  * Retrieve and parse information provided by a Sudoku Web Service API.
@@ -23,14 +24,14 @@ import com.eclipsesource.json.JsonValue;
  * Occasionally the API will hang on size 9 difficulty 3.
  * 
  * @author      Anthony DesArmier
- * @version     1.2
+ * @version     1.2.1
  * @since       1.1
  */
 public class JacksonClient {
 	
 	/**
 	 * Retrieves and parses a JSON object supplied by a Sudoku Web Service API that provides various information.
-	 * @return JSONInfo containing various Sudoku Web Service API information.
+	 * @return JSONInfo containing various Sudoku Web Service API information, null if error occurred.
 	 * @see JSONInfo
 	 */
 	public static JSONInfo getInfo() {
@@ -112,7 +113,7 @@ public class JacksonClient {
 			if(thing != null)
 				thing.close();
 		} catch (IOException e) {
-			printError("Unable to close reader.", e);
+			printError("Unable to close stream.", e);
 		}
 	}
 	
@@ -123,18 +124,11 @@ public class JacksonClient {
      * @param e exception whose stacktrace is to be printed.
      */
     private static void printError(String message, Exception e) {
-    	PrintStream out = null;
-		try {
-			out = new PrintStream(new FileOutputStream("errorlog.txt"));
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		}
-    	System.setOut(out);
-    	System.setErr(out);
-    	System.out.println(new java.util.Date() +":"+ message);
-    	e.printStackTrace(out);
-    	closeStream(out);
-    	System.exit(0);
+    	int x = JOptionPane.showConfirmDialog(null, message+"\nRestart?", "Error", JOptionPane.ERROR_MESSAGE);
+    	if(x==0)
+    		SudokuDialog.main(null);
+    	else
+    		System.exit(0);
     }
 	
 }
