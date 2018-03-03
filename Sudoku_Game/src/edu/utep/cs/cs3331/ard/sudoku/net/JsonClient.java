@@ -27,14 +27,14 @@ import edu.utep.cs.cs3331.ard.sudoku.dialog.SudokuDialog;
  * @version     1.2.1
  * @since       1.1
  */
-public class JacksonClient {
+public class JsonClient {
 	
 	/**
 	 * Retrieves and parses a JSON object supplied by a Sudoku Web Service API that provides various information.
 	 * @return JSONInfo containing various Sudoku Web Service API information, null if error occurred.
-	 * @see JSONInfo
+	 * @see JsonInfo
 	 */
-	public static JSONInfo getInfo() {
+	public static JsonInfo getInfo() {
 		URL url;
 		InputStreamReader in = null;
 		JsonObject info = null;
@@ -49,7 +49,7 @@ public class JacksonClient {
 		} finally {
 			closeStream(in);
 		}
-		JSONInfo jsonInfo = new JSONInfo();
+		JsonInfo jsonInfo = new JsonInfo();
 		JsonArray jsonSizes = info.get("sizes").asArray();
 		JsonArray jsonLevels = info.get("levels").asArray();
 		List<Integer> list = new ArrayList<>();
@@ -70,9 +70,9 @@ public class JacksonClient {
 	 * @param size dimension of the desired Sudoku board.
 	 * @param level difficulty level of the desired Sudoku board.
 	 * @return JSONBoard containing information representing a Sudoku game board.
-	 * @see JSONBoard
+	 * @see JsonBoard
 	 */
-	public static JSONBoard requestBoard(int size, int level) {
+	public static JsonBoard requestBoard(int size, int level) {
 		URL url;
 		InputStreamReader in = null;
 		JsonObject board = null;
@@ -87,7 +87,7 @@ public class JacksonClient {
 		} finally {
 			closeStream(in);
 		}
-		JSONBoard jsonBoard = new JSONBoard();
+		JsonBoard jsonBoard = new JsonBoard();
 		JsonArray jsonList;
 		boolean response = board.getBoolean("response", false);
 		if(!response)

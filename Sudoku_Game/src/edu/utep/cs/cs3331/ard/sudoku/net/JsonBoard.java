@@ -12,13 +12,13 @@ import java.util.List;
  * @version     1.1
  * @since       1.1
  */
-public class JSONBoard {
+public class JsonBoard {
 	/** True if API produced a valid response, false otherwise. */
 	private boolean response;
 	/** Size of the Sudoku game board. */
  	private int size;
- 	/** Sudoku game board squares. @see {@link JSONSquare} */
-	private List<JSONSquare> squares = new ArrayList<>();
+ 	/** Sudoku game board squares. @see {@link JsonSquare} */
+	private List<JsonSquare> squares = new ArrayList<>();
 	/** Message for why response was false. */
 	private String reason;
 
@@ -56,14 +56,14 @@ public class JSONBoard {
 	 * Getter for {@link #squares}.
 	 * @return {@link #squares}
 	 */
-	public List<JSONSquare> getSquares() {
+	public List<JsonSquare> getSquares() {
 		return squares;
 	}
 
 	/**
 	 * Setter for {@link #squares}.
 	 */
-	public void setSquares(List<JSONSquare> squares) {
+	public void setSquares(List<JsonSquare> squares) {
 		this.squares = squares;
 	}
 	
@@ -84,11 +84,11 @@ public class JSONBoard {
 
 	/**
 	 * Adds a new JSONSquare to the JSONBoard.
-	 * @param x {@link JSONSquare#x}
-	 * @param y {@link JSONSquare#y}
-	 * @param value {@link JSONSquare#value}
+	 * @param x {@link JsonSquare#x}
+	 * @param y {@link JsonSquare#y}
+	 * @param value {@link JsonSquare#value}
 	 */
 	public void addSquare(int x, int y, int value) {
-		squares.add(new JSONSquare(x, y, value));
+		squares.add(new JsonSquare(x, y, value));
 	}
 }

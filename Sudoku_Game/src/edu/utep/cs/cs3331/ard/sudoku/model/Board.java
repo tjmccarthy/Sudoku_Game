@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Set;
 
 import edu.utep.cs.cs3331.ard.sudoku.model.Square.State;
-import edu.utep.cs.cs3331.ard.sudoku.net.JSONBoard;
-import edu.utep.cs.cs3331.ard.sudoku.net.JSONSquare;
+import edu.utep.cs.cs3331.ard.sudoku.net.JsonBoard;
+import edu.utep.cs.cs3331.ard.sudoku.net.JsonSquare;
 
 
 /**
@@ -38,13 +38,13 @@ public class Board {
 	 * @param boardJSON	JsonObject containing information used to create a Sudoku game board.
 	 * @see #board
 	 */
-	public Board(JSONBoard jsonBoard) {
+	public Board(JsonBoard jsonBoard) {
 		this.size = jsonBoard.getSize();
 		this.cellDim = (int)Math.sqrt(size); // Should be a perfect square
 		grid = new ArrayList<>(size*size);
 		for(int i=0; i<size*size; i++)
 			grid.add(new Square());
-        for (JSONSquare square : jsonBoard.getSquares()) {
+        for (JsonSquare square : jsonBoard.getSquares()) {
         	int index = square.getX()*size + square.getY();
         	grid.get(index).setValue(square.getValue());
         	grid.get(index).setState(State.FIXED);
@@ -131,6 +131,7 @@ public class Board {
 	 * A valid integer can be any integer (0,board size).
 	 * @param value	value to determine if it is valid for the Sudoku game board.
 	 * @return true if the input is valid, false otherwise.
+	 * @deprecated
 	 */
 	public boolean validInput(int value) {
 		if(value > size || value < 0)

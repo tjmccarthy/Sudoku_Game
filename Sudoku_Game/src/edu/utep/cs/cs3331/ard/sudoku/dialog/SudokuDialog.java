@@ -24,8 +24,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import edu.utep.cs.cs3331.ard.sudoku.model.Board;
-import edu.utep.cs.cs3331.ard.sudoku.net.JSONInfo;
-import edu.utep.cs.cs3331.ard.sudoku.net.JacksonClient;
+import edu.utep.cs.cs3331.ard.sudoku.net.JsonClient;
+import edu.utep.cs.cs3331.ard.sudoku.net.JsonInfo;
 
 /**
  * Dialog template for playing simple Sudoku games.
@@ -87,7 +87,7 @@ public class SudokuDialog extends JFrame {
     public SudokuDialog(Dimension dim, int size, int difficulty) {
         super("Sudoku");
         setSize(dim);
-        board = new Board(JacksonClient.requestBoard(size, difficulty));
+        board = new Board(JsonClient.requestBoard(size, difficulty));
         boardPanel = new BoardPanel(board, this::boardClicked);
         configureUI();
         configureSound();
@@ -141,7 +141,7 @@ public class SudokuDialog extends JFrame {
     			"New Game", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
     	playClick();
     	if(x==0) {
-    		List<Integer> levels = JacksonClient.getInfo().getLevels();
+    		List<Integer> levels = JsonClient.getInfo().getLevels();
     		int difficulty = JOptionPane.showOptionDialog(null, "Choose Difficulty", "New Game",
     				JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, levels.toArray(), levels.get(0));
     		playClick();
@@ -259,7 +259,7 @@ public class SudokuDialog extends JFrame {
      * @param args not used.
      */
     public static void main(String[] args) {
-    	JSONInfo info = JacksonClient.getInfo();
+    	JsonInfo info = JsonClient.getInfo();
     	List<Integer> sizes = info.getSizes();
     	int size = JOptionPane.showOptionDialog(null, "Choose Board Size: ", "New Game",
 				JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, sizes.toArray(), sizes.get(0));

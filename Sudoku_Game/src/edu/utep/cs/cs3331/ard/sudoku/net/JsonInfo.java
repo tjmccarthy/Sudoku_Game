@@ -11,7 +11,7 @@ import java.util.List;
  * @version     1.2
  * @since       1.1
  */
-public class JSONInfo {
+public class JsonInfo {
 	/** Sudoku game board sizes. */
 	private List<Integer> sizes;
 	/** Sudoku game board levels. */

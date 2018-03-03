@@ -9,7 +9,7 @@ package edu.utep.cs.cs3331.ard.sudoku.net;
  * @version     1.1
  * @since       1.1
  */
-public class JSONSquare {
+public class JsonSquare {
 	/** x coordinate of the square. */
 	private int x;
 	/** y coordinate of the square. */
@@ -23,7 +23,7 @@ public class JSONSquare {
 	 * @param y {@link y}
 	 * @param value {@link value}
 	 */
-	public JSONSquare(int x, int y, int value) {
+	public JsonSquare(int x, int y, int value) {
 		this.x = x;
 		this.y = y;
 		this.value = value;
