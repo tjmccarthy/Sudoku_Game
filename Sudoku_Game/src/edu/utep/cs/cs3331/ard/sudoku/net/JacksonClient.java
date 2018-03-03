@@ -48,16 +48,15 @@ public class JacksonClient {
 		} finally {
 			closeStream(in);
 		}
-		List<Integer> list = new ArrayList<>();
 		JSONInfo jsonInfo = new JSONInfo();
-		JsonArray jsonList;
-		jsonList = info.get("sizes").asArray();
-		for(JsonValue size:jsonList)
+		JsonArray jsonSizes = info.get("sizes").asArray();
+		JsonArray jsonLevels = info.get("levels").asArray();
+		List<Integer> list = new ArrayList<>();
+		for(JsonValue size:jsonSizes)
 			list.add(size.asInt());
 		jsonInfo.setSizes(list);
-		list.clear();
-		jsonList = info.get("levels").asArray();
-		for(JsonValue level:jsonList)
+		list = new ArrayList<>();
+		for(JsonValue level:jsonLevels)
 			list.add(level.asInt());
 		jsonInfo.setLevels(list);
 		jsonInfo.setDefaultSize(info.getInt("defaultSize", -1));
@@ -129,14 +128,12 @@ public class JacksonClient {
 			out = new PrintStream(new FileOutputStream("errorlog.txt"));
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
-		} finally {
-			closeStream(out);
 		}
     	System.setOut(out);
     	System.setErr(out);
     	System.out.println(new java.util.Date() +":"+ message);
     	e.printStackTrace(out);
-    	out.close();
+    	closeStream(out);
     	System.exit(0);
     }
 	

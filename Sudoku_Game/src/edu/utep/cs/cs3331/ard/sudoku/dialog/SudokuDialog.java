@@ -24,6 +24,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import edu.utep.cs.cs3331.ard.sudoku.model.Board;
+import edu.utep.cs.cs3331.ard.sudoku.net.JSONInfo;
 import edu.utep.cs.cs3331.ard.sudoku.net.JacksonClient;
 
 /**
@@ -258,13 +259,14 @@ public class SudokuDialog extends JFrame {
      * @param args not used.
      */
     public static void main(String[] args) {
-    	Integer[] sizes = {4,9};
+    	JSONInfo info = JacksonClient.getInfo();
+    	List<Integer> sizes = info.getSizes();
     	int size = JOptionPane.showOptionDialog(null, "Choose Board Size: ", "New Game",
-				JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, sizes, sizes[0]);
+				JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, sizes.toArray(), sizes.get(0));
     	if(size==-1)
     		System.exit(0);
-    	size = sizes[size];
-    	List<Integer> levels = JacksonClient.getInfo().getLevels();
+    	size = sizes.get(size);
+    	List<Integer> levels = info.getLevels();
     	int difficulty = JOptionPane.showOptionDialog(null, "Choose Difficulty", "New Game",
 				JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, levels.toArray(), levels.get(0));
     	if(difficulty==-1)

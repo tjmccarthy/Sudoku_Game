@@ -47,8 +47,8 @@ public class JSONInfo {
 	/**
 	 * Setter for {@link #levels}.
 	 */
-	public void setLevels(List<Integer> list) {
-		this.levels = list;
+	public void setLevels(List<Integer> levels) {
+		this.levels = levels;
 	}
 	
 	/**
