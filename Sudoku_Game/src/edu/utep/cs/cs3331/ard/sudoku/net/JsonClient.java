@@ -18,14 +18,13 @@ import com.eclipsesource.json.JsonValue;
 import edu.utep.cs.cs3331.ard.sudoku.dialog.SudokuDialog;
 
 /**
- * Retrieve and parse information provided by a Sudoku Web Service API.
+ * Retrieves and parses information provided by a Sudoku Web Service API.
  * <p>
  * See <a href="http://www.cs.utep.edu/cheon/ws/sudoku/">http://www.cs.utep.edu/cheon/ws/sudoku/</a>
  * Occasionally the API will hang on size 9 difficulty 3.
  * 
  * @author      Anthony DesArmier
  * @version     1.2.1
- * @since       1.1
  */
 public class JsonClient {
 	

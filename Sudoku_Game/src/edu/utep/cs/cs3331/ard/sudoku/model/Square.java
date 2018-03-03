@@ -3,6 +3,12 @@ package edu.utep.cs.cs3331.ard.sudoku.model;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Sudoku game board square consisting of a value and state.
+ * 
+ * @author      Anthony DesArmier
+ * @version     1.2
+ */
 public class Square {
 	
 	/** Various states a square may be in.

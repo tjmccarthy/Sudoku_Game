@@ -34,7 +34,6 @@ import edu.utep.cs.cs3331.ard.sudoku.net.JsonInfo;
  * @author		Anthony DesArmier
  * @author 		Trevor McCarthy
  * @version     1.1.1
- * @since       1.1
  */
 @SuppressWarnings("serial")
 public class SudokuDialog extends JFrame {

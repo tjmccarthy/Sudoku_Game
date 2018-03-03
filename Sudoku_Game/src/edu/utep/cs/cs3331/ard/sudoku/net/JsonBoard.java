@@ -10,7 +10,6 @@ import java.util.List;
  * 
  * @author		Anthony DesArmier
  * @version     1.1
- * @since       1.1
  */
 public class JsonBoard {
 	/** True if API produced a valid response, false otherwise. */

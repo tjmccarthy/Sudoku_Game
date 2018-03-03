@@ -9,13 +9,11 @@ import edu.utep.cs.cs3331.ard.sudoku.model.Square.State;
 import edu.utep.cs.cs3331.ard.sudoku.net.JsonBoard;
 import edu.utep.cs.cs3331.ard.sudoku.net.JsonSquare;
 
-
 /**
  * Sudoku game board and various game logic.
  * 
  * @author      Anthony DesArmier
  * @version     1.2
- * @since       1.0
  */
 public class Board {
 	/** Dimension of a Sudoku game board. */

@@ -7,7 +7,6 @@ package edu.utep.cs.cs3331.ard.sudoku.net;
  * 
  * @author      Anthony DesArmier
  * @version     1.1
- * @since       1.1
  */
 public class JsonSquare {
 	/** x coordinate of the square. */

@@ -22,7 +22,6 @@ import edu.utep.cs.cs3331.ard.sudoku.model.Square.State;
  * @author 		Trevor McCarthy
  * @author		Yoonsik Cheon
  * @version     1.2
- * @since       1.1
  */
 @SuppressWarnings("serial")
 public class BoardPanel extends JPanel {

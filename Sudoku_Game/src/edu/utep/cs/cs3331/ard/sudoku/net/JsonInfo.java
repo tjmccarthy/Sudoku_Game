@@ -9,7 +9,6 @@ import java.util.List;
  * 
  * @author		Anthony DesArmier
  * @version     1.2
- * @since       1.1
  */
 public class JsonInfo {
 	/** Sudoku game board sizes. */
