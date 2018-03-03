@@ -32,7 +32,6 @@ public class JSONBoard {
 
 	/**
 	 * Setter for {@link #response}.
-	 * @return {@link #response}
 	 */
 	public void setResponse(boolean response) {
 		this.response = response;
@@ -48,7 +47,6 @@ public class JSONBoard {
 
 	/**
 	 * Setter for {@link #size}.
-	 * @return {@link #size}
 	 */
 	public void setSize(int size) {
 		this.size = size;
@@ -64,7 +62,6 @@ public class JSONBoard {
 
 	/**
 	 * Setter for {@link #squares}.
-	 * @return {@link #squares}
 	 */
 	public void setSquares(List<JSONSquare> squares) {
 		this.squares = squares;
@@ -80,7 +77,6 @@ public class JSONBoard {
 
 	/**
 	 * Setter for {@link #reason}.
-	 * @return {@link #reason}
 	 */
 	public void setReason(String reason) {
 		this.reason = reason;

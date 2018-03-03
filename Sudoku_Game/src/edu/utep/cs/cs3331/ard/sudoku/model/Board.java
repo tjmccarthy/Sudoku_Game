@@ -1,8 +1,11 @@
 package edu.utep.cs.cs3331.ard.sudoku.model;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import edu.utep.cs.cs3331.ard.sudoku.model.Square.State;
 import edu.utep.cs.cs3331.ard.sudoku.net.JSONBoard;
 import edu.utep.cs.cs3331.ard.sudoku.net.JSONSquare;
 
@@ -11,7 +14,7 @@ import edu.utep.cs.cs3331.ard.sudoku.net.JSONSquare;
  * Sudoku game board and various game logic.
  * 
  * @author      Anthony DesArmier
- * @version     1.1
+ * @version     1.2
  * @since       1.0
  */
 public class Board {
@@ -22,13 +25,11 @@ public class Board {
 	/** Sudoku game board has been solved or not. */
 	private boolean solved;
 	/** Sudoku game board represented as a 2D integer array containing cell values. */
-	private int[][] board;
-	/** x, y coordinates for the last selected board square. */
-	private int[] lastSelect;
-	/** x, y coordinates for squares that are conflicting with a chosen square. */
-	private Set<Integer[]> errorSquares;
-	/** x, y coordinates for squares that are pre-filled and cannot be changed. */
-	private Set<Integer[]> fixedSquares;
+	private List<Square> grid;
+	/** x, y coordinate of the last selected square. */
+	private int[] lastSelected;
+	/** Indices of the last set of error squares. */
+	private Set<Integer> lastError;
 	
 	/**
 	 * Constructor for the class Board.
@@ -39,16 +40,17 @@ public class Board {
 	 */
 	public Board(JSONBoard jsonBoard) {
 		this.size = jsonBoard.getSize();
-		board = new int[size][size];
 		this.cellDim = (int)Math.sqrt(size); // Should be a perfect square
-		errorSquares = new HashSet<>();
-		fixedSquares = new HashSet<>();
+		grid = new ArrayList<>(size*size);
+		for(int i=0; i<size*size; i++)
+			grid.add(new Square());
         for (JSONSquare square : jsonBoard.getSquares()) {
-            board[square.getX()][square.getY()] = square.getValue();
-            fixedSquares.add(new Integer[] {square.getX(), square.getY()});
+        	int index = square.getX()*size + square.getY();
+        	grid.get(index).setValue(square.getValue());
+        	grid.get(index).setState(State.FIXED);
         }
-        lastSelect = new int[] {-1,-1};
-        errorSquares = new HashSet<>();
+        lastSelected = new int[] {-1,-1};
+        lastError = new HashSet<>();
 	}
 
 	/**
@@ -76,27 +78,19 @@ public class Board {
 	}
 	
 	/**
-	 * Getter for {@link #lastSelect}.
-	 * @return {@link #lastSelect}
+	 * Getter for {@link #grid}.
+	 * @return {@link #grid}
 	 */
-	public int[] getLastSelect() {
-		return lastSelect;
+	public List<Square> getGrid() {
+		return grid;
 	}
 	
 	/**
-	 * Getter for {@link #errorSquares}.
-	 * @return {@link #errorSquares}
+	 * Getter for {@link #lastSelected}.
+	 * @return {@link #lastSelected}
 	 */
-	public Set<Integer[]> getErrorSquares() {
-		return errorSquares;
-	}
-	
-	/**
-	 * Getter for {@link #fixedSquares}.
-	 * @return {@link #fixedSquares}
-	 */
-	public Set<Integer[]> getFixedSquares() {
-		return fixedSquares;
+	public int[] getLastSelected() {
+		return lastSelected;
 	}
 	
 	/**
@@ -106,7 +100,7 @@ public class Board {
 	 * @return value of the provided cell space.
 	 */
 	public int getValue(int x, int y) {
-		return board[x][y];
+		return grid.get(x*size+y).getValue();
 	}
 
 	/**
@@ -114,19 +108,19 @@ public class Board {
 	 * @param values x,y and z values corresponding to the Sudoku game board position and value.
 	 */
 	public void update(int[] values) {
-		if(solved) // no updates if completed
+		if(solved)
 			return;
-		errorSquares.clear();
-		for(Integer[] fixedSquare : fixedSquares) { // no update if selected square is fixed
-			if(fixedSquare[0]==values[0] && fixedSquare[1]==values[1]) {
-				lastSelect = new int[] {-1,-1};
-				return;
-			}
-		}
+		lastSelected[0] = lastSelected[1] = -1;
+		if(grid.get(values[0]*size+values[1]).getState().contains(State.FIXED))
+			return;
 		if(!isValidEntry(values))
 			return;
-		board[values[0]][values[1]] = values [2];
-		lastSelect = values.clone();
+		int index = values[0]*size+values[1];
+		Square square = grid.get(index);
+		square.setValue(values[2]);
+		square.setState(State.SELECTED);
+		lastSelected[0] = values[0];
+		lastSelected[1] = values[1];
 		if(values[2]!=0 && isValidSudoku()) // no need to check board if a 0 was just inserted
 			solved = true;
 	}
@@ -159,7 +153,7 @@ public class Board {
 			bitmap = new boolean[size+1];
 			bitmap[0] = true;
 			for(int j=0; j<size; j++)
-				if (!(bitmap[board[i][j]] ^= true))
+				if (!(bitmap[grid.get(i*size+j).getValue()] ^= true))
 					return false;
 		}
 		
@@ -167,7 +161,7 @@ public class Board {
 			bitmap = new boolean[size+1];
 			bitmap[0] = true;
 			for(int j=0; j<size; j++)
-				if (!(bitmap[board[j][i]] ^= true))
+				if (!(bitmap[grid.get(j*size+i).getValue()] ^= true))
 					return false;
 		}
 		
@@ -177,7 +171,7 @@ public class Board {
 				bitmap[0] = true;
 				for(int x=i*cellDim; x<i*cellDim+cellDim; x++)
 					for(int y=j*cellDim; y<j*cellDim+cellDim; y++)
-	                   	if (!(bitmap[board[x][y]] ^= true))
+	                   	if (!(bitmap[grid.get(x*size+y).getValue()] ^= true))
 	                   		return false;
 			}
 
@@ -193,22 +187,40 @@ public class Board {
 	 * @return true if valid, false otherwise.
 	 */
 	private boolean isValidEntry(int[] values) {
+		lastError.forEach(i -> grid.get(i).removeState(State.ERROR)); // clear out old errors
+		lastError.clear();
 		if(values[2]!=0 ) { // no validity check if value is 0
 			int[] subGrid = {(values[0]/cellDim)*cellDim, (values[1]/cellDim)*cellDim}; // floor indices to nearest multiple of cell dimension
-			int j=-1, x=0, y=0;
+			int j=-1, x=0, y=0, index=0;
+			boolean error = false;
+			Square square;
 			for(int i=0; i<size; i++) {
-				if(board[values[0]][i]==values [2] ) // column
-					errorSquares.add(new Integer[] {values[0],i});
-				if(board[i][values[1]]==values [2]) // row
-					errorSquares.add(new Integer[] {i,values[1]});
-				if(i%cellDim==0) j++; // sub-grid
+				index = values[0]*size+i;
+				square = grid.get(index); // column
+				if(square.equals(values[2]) ) {
+					square.setState(State.ERROR);
+					lastError.add(index);
+					error = true;
+				}
+				index = i*size+values[1];
+				square = grid.get(index); // row
+				if(square.equals(values [2])) { 
+					square.setState(State.ERROR);
+					lastError.add(index);
+					error = true;
+				}
+				if(i%cellDim==0) j++; 
 				x = i%cellDim+subGrid[0];
 				y = j%cellDim+subGrid[1];
-				if(board[x][y]==values [2]) 
-					errorSquares.add(new Integer[] {x,y});
+				index = x*size+y;
+				square = grid.get(index); // sub-grid
+				if(square.equals(values[2])) {
+					square.setState(State.ERROR);
+					lastError.add(index);
+					error = true;
+				}
 			}
-			if(!errorSquares.isEmpty())
-				return false;
+			if(error) return false;
 		}
 		return true;
 	}

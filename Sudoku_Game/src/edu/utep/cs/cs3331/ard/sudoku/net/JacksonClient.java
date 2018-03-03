@@ -1,5 +1,6 @@
 package edu.utep.cs.cs3331.ard.sudoku.net;
 
+import java.io.Closeable;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -34,15 +35,18 @@ public class JacksonClient {
 	 */
 	public static JSONInfo getInfo() {
 		URL url;
+		InputStreamReader in = null;
 		JsonObject info = null;
 		try {
 			url = new URL("http://www.cs.utep.edu/cheon/ws/sudoku/info/");
-			InputStreamReader in = new InputStreamReader(url.openStream());
+			in = new InputStreamReader(url.openStream());
 			info = Json.parse(in).asObject();
 		} catch (MalformedURLException e) {
 			printError("Malformed URL.\n", e);
 		} catch (IOException e) {
 			printError("Failed to connect to server.\n", e);
+		} finally {
+			closeStream(in);
 		}
 		List<Integer> list = new ArrayList<>();
 		JSONInfo jsonInfo = new JSONInfo();
@@ -60,7 +64,7 @@ public class JacksonClient {
 		jsonInfo.setDefaultLevel(info.getInt("defaultLevel", -1));
 		return jsonInfo;
 	}
-	
+
 	/**
 	 * Retrieves and parses a JSON object supplied by a Sudoku Web Service API that provides a Sudoku game board based on given parameters.
 	 * @param size dimension of the desired Sudoku board.
@@ -70,15 +74,18 @@ public class JacksonClient {
 	 */
 	public static JSONBoard requestBoard(int size, int level) {
 		URL url;
+		InputStreamReader in = null;
 		JsonObject board = null;
 		try {
 			url = new URL(String.format("http://www.cs.utep.edu/cheon/ws/sudoku/new/?size=%d&level=%d", size, level));
-			InputStreamReader in = new InputStreamReader(url.openStream());
+			in = new InputStreamReader(url.openStream());
 			board = Json.parse(in).asObject();
 		} catch (MalformedURLException e) {
 			printError("Malformed URL.\n", e);
 		} catch (IOException e) {
 			printError("Failed to connect to server.\n", e);
+		} finally {
+			closeStream(in);
 		}
 		JSONBoard jsonBoard = new JSONBoard();
 		JsonArray jsonList;
@@ -97,6 +104,19 @@ public class JacksonClient {
 		return jsonBoard;
 	}
 	
+	/** 
+	 * Closes an IO reader.
+	 * @param reader IO reader to close.
+	 * */
+	private static void closeStream(Closeable thing) {
+		try {
+			if(thing != null)
+				thing.close();
+		} catch (IOException e) {
+			printError("Unable to close reader.", e);
+		}
+	}
+	
     /**
      * Prints a message and stack trace to an error log.
      * 
@@ -109,6 +129,8 @@ public class JacksonClient {
 			out = new PrintStream(new FileOutputStream("errorlog.txt"));
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
+		} finally {
+			closeStream(out);
 		}
     	System.setOut(out);
     	System.setErr(out);

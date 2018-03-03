@@ -10,11 +10,11 @@ package edu.utep.cs.cs3331.ard.sudoku.net;
  * @since       1.1
  */
 public class JSONSquare {
-	/** x coordinate for a Sudoku game board square. */
+	/** x coordinate of the square. */
 	private int x;
-	/** y coordinate for a Sudoku game board square. */
+	/** y coordinate of the square. */
 	private int y;
-	/** Square value for a Sudoku game board square. */
+	/** Value of the square. */
 	private int value;
 	
 	/** 
@@ -39,7 +39,6 @@ public class JSONSquare {
 	
 	/**
 	 * Setter for {@link #x}.
-	 * @return {@link #x}
 	 */
 	public void setX(int x) {
 		this.x = x;
@@ -55,7 +54,6 @@ public class JSONSquare {
 	
 	/**
 	 * Setter for {@link #y}.
-	 * @return {@link #y}
 	 */
 	public void setY(int y) {
 		this.y = y;
@@ -71,7 +69,6 @@ public class JSONSquare {
 	
 	/**
 	 * Setter for {@link #value}.
-	 * @return {@link #value}
 	 */
 	public void setValue(int value) {
 		this.value = value;

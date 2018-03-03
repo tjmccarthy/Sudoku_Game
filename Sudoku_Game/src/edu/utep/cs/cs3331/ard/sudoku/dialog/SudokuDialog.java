@@ -146,7 +146,6 @@ public class SudokuDialog extends JFrame {
     		playClick();
     		if(difficulty!=-1) {
     			difficulty = levels.get(difficulty);
-    			System.out.println(difficulty);
     			this.dispose();
     			new SudokuDialog(DEFAULT_DIM, size, difficulty);
     		}

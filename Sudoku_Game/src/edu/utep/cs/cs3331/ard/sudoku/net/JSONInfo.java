@@ -31,7 +31,6 @@ public class JSONInfo {
 	
 	/**
 	 * Setter for {@link #sizes}.
-	 * @return {@link #sizes}
 	 */
 	public void setSizes(List<Integer> sizes) {
 		this.sizes = sizes;
@@ -47,7 +46,6 @@ public class JSONInfo {
 	
 	/**
 	 * Setter for {@link #levels}.
-	 * @return {@link #levels}
 	 */
 	public void setLevels(List<Integer> list) {
 		this.levels = list;
@@ -63,7 +61,6 @@ public class JSONInfo {
 	
 	/**
 	 * Setter for {@link #defaultSize}.
-	 * @return {@link #defaultSize}
 	 */
 	public void setDefaultSize(int defaultSize) {
 		this.defaultSize = defaultSize;
@@ -79,7 +76,6 @@ public class JSONInfo {
 	
 	/**
 	 * Setter for {@link #defaultLevel}.
-	 * @return {@link #defaultLevel}
 	 */
 	public void setDefaultLevel(int defaultLevel) {
 		this.defaultLevel = defaultLevel;

@@ -11,16 +11,17 @@ import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
 
 import edu.utep.cs.cs3331.ard.sudoku.model.Board;
+import edu.utep.cs.cs3331.ard.sudoku.model.Square;
+import edu.utep.cs.cs3331.ard.sudoku.model.Square.State;
 
 /**
  * A special panel class to display a Sudoku board modeled by the
  * {@link edu.utep.cs.cs3331.ard.sudoku.model.Board} class.
  *
- * @see edu.utep.cs.cs3331.ard.sudoku.model.Board
- * @author		Yoonsik Cheon
  * @author		Anthony DesArmier
  * @author 		Trevor McCarthy
- * @version     1.1
+ * @author		Yoonsik Cheon
+ * @version     1.2
  * @since       1.1
  */
 @SuppressWarnings("serial")
@@ -36,11 +37,16 @@ public class BoardPanel extends JPanel {
 		void clicked(int x, int y);
 	}
 	
-    /** Background color of the board. */
+	/** Board background color. */
 	private static final Color BOARD_COLOR = new Color(247, 223, 150);
-	
-	/** Background color of affixed squares. */
+	/** Fixed square color. */
 	private static final Color FIXED_COLOR = new Color(225, 225, 225);
+	/** Error square color. */
+	private static final Color ERROR_COLOR = Color.RED;
+	/** Selected square color. */
+	private static final Color SELECT_COLOR = Color.PINK;
+	/** Completed board color. */
+	private static final Color WIN_COLOR = Color.GREEN;
 	
 	/** Font of the board text. */
 	private static final Font BOARD_NUMBER = new Font("Monospaced", Font.BOLD, 14);
@@ -55,7 +61,8 @@ public class BoardPanel extends JPanel {
     public BoardPanel(Board board, ClickListener listener) {
         this.board = board;
         addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
+            @Override
+			public void mouseClicked(MouseEvent e) {
             	int xy = locateSquare(e.getX(), e.getY());
             	if (xy >= 0) {
             		listener.clicked(xy / 100, xy % 100);
@@ -74,7 +81,6 @@ public class BoardPanel extends JPanel {
 
     /**
 	 * Setter for {@link #board}.
-	 * @return {@link #board}
 	 */
     public void setBoard(Board board) {
     	this.board = board;
@@ -110,28 +116,34 @@ public class BoardPanel extends JPanel {
         // draw background
         //final Color oldColor = g.getColor();
         if(board.isSolved())
-        	g.setColor(Color.GREEN);
+        	g.setColor(WIN_COLOR);
         else
         	g.setColor(BOARD_COLOR);
         g.fillRect(0, 0, squareSize * board.getSize(), squareSize * board.getSize());
         
         // fill board squares
-        g.setColor(FIXED_COLOR); // color fixed squares
-        for(Integer[] fixedSquare : board.getFixedSquares()) {
-        	g.fillRect(fixedSquare[0]*squareSize, fixedSquare[1]*squareSize, squareSize, squareSize);
+        int[] lastIndex = board.getLastSelected();
+        if(lastIndex[0]!=-1) {
+        	g.setColor(SELECT_COLOR);
+    		g.fillRect(lastIndex[0]*squareSize, lastIndex[1]*squareSize, squareSize, squareSize);
         }
-        
-        if(!board.getErrorSquares().isEmpty()) { // color error squares, if any
-	        g.setColor(Color.RED);
-	        for(Integer[] errorSquare : board.getErrorSquares()) {
-	        	g.fillOval(errorSquare[0]*squareSize+squareSize/4, errorSquare[1]*squareSize+squareSize/4,
+        int x=0, y=0;
+        for(Square square : board.getGrid()) {
+        	if(square.getState().contains(State.FIXED)) {
+        		g.setColor(FIXED_COLOR);
+        		g.fillRect(x, y, squareSize, squareSize);
+        	}
+        	if(square.getState().contains(State.ERROR)) {
+        		g.setColor(ERROR_COLOR);
+        		g.fillOval(x+squareSize/4, y+squareSize/4,
 	        			squareSize/2, squareSize/2);
-	        }
-        }
-        else { // color last clicked square if no error squares
-        	g.setColor(Color.PINK); 
-            int[] lastSelect = board.getLastSelect();
-            g.fillRect(lastSelect[0]*squareSize, lastSelect[1]*squareSize, squareSize, squareSize);
+        	}
+        	y += squareSize;
+        	if(y==board.getSize()*squareSize) {
+        		y = 0;
+        		x += squareSize;
+        	}
+        		
         }
         
 	    g.setColor(Color.BLACK); // fill in numbers  
